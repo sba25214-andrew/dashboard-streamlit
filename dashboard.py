@@ -71,3 +71,24 @@ with col2:
     plt.close()
 
 st.markdown("---")
+
+#Row 2
+col3, col4 = st.columns(2)
+
+#Chart 3 - Basket Size
+with col3:
+    st.subheader("How Big is a Typical Order?")
+    basket_size = dash_df.groupby("order_id")["product_id"].count()
+    bins   = [0, 5, 10, 15, 20, 25, 100]
+    labels = ["1-5", "6-10", "11-15", "16-20", "21-25", "26+"]
+    basket_bins = pd.cut(basket_size, bins=bins, labels=labels).value_counts().reindex(labels)
+    fig, ax = plt.subplots(figsize=(6, 5))
+    ax.bar(basket_bins.index, basket_bins.values, color="#117A65", edgecolor="white", width=0.7)
+    ax.set_xlabel("Number of Items in Basket", fontsize=12, fontweight="bold")
+    ax.set_ylabel("Number of Orders", fontsize=12, fontweight="bold")
+    ax.set_title("How Big is a Typical Order?", fontsize=14, fontweight="bold")
+    ax.tick_params(axis="both", labelsize=11)
+    plt.tight_layout()
+    st.pyplot(fig)
+    plt.close()
+    st.caption(f"Average basket size: {basket_size.mean():.0f} items")
