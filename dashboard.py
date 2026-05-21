@@ -22,12 +22,12 @@ parquet_dir = "parquet_data"
 @st.cache_data
 def load_data():
     aisles_df         = pd.read_parquet(os.path.join(parquet_dir, "aisles.parquet"))
-    orders_df         = pd.read_parquet(os.path.join(parquet_dir, "orders.parquet"))
+    orders_df         = pd.read_parquet(os.path.join(parquet_dir, "orders_small.parquet"))
     products_df       = pd.read_parquet(os.path.join(parquet_dir, "products.parquet"))
     departments_df    = pd.read_parquet(os.path.join(parquet_dir, "departments.parquet"))
-    order_products_df = pd.read_parquet(os.path.join(parquet_dir, "order_products.parquet"))
+    order_products_df = pd.read_parquet(os.path.join(parquet_dir, "order_products_small.parquet"))
 
-    #Build dash_df the same way as the notebook
+    # Build dash_df
     dash_df = order_products_df.merge(products_df[["product_id", "product_name", "aisle_id", "department_id"]], on="product_id", how="left")
     dash_df = dash_df.merge(aisles_df[["aisle_id", "aisle"]], on="aisle_id", how="left")
     dash_df = dash_df.merge(departments_df[["department_id", "department"]], on="department_id", how="left")

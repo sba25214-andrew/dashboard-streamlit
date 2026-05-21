@@ -1,2 +1,2 @@
-﻿parquet_data/
-.ipynb_checkpoints/
+﻿parquet_data/order_products.parquet
+parquet_data/orders.parquet
