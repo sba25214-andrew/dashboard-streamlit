@@ -92,3 +92,21 @@ with col3:
     st.pyplot(fig)
     plt.close()
     st.caption(f"Average basket size: {basket_size.mean():.0f} items")
+
+    #Chart 4 - Reordered vs First-Time by Department
+with col4:
+    st.subheader("Reordered vs First-Time by Department")
+    department_data = dash_df.groupby("department")["reordered"].value_counts().unstack().fillna(0).nlargest(8, 1)
+    fig, ax = plt.subplots(figsize=(6, 5))
+    department_data.plot(kind="barh", stacked=True, ax=ax,
+                         color=["#BDC3C7", "#117A65"], edgecolor="white")
+    ax.set_xlabel("Number of Products", fontsize=12, fontweight="bold")
+    ax.set_ylabel("Departments", fontsize=12, fontweight="bold")
+    ax.set_title("Reordered vs First-Time by Department", fontsize=14, fontweight="bold")
+    ax.legend(["First Time", "Reordered"], fontsize=11)
+    ax.tick_params(axis="both", labelsize=11)
+    plt.tight_layout()
+    st.pyplot(fig)
+    plt.close()
+
+st.markdown("---")
