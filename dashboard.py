@@ -53,3 +53,21 @@ with col1:
     plt.tight_layout()
     st.pyplot(fig)
     plt.close()
+
+    #Chart 2 - Top 10 Aisles by Reorder Rate
+with col2:
+    st.subheader("Top 10 Aisles by Reorder Rate")
+    reorder = dash_df.groupby("aisle")["reordered"].mean().nlargest(10).sort_values().mul(100)
+    gradient = ["#A3E4D7", "#7DCEA0", "#52BE80", "#45B39D", "#27AE60",
+                "#1ABC9C", "#17A589", "#148F77", "#117A65", "#0E6655"]
+    fig, ax = plt.subplots(figsize=(6, 5))
+    ax.barh(range(len(reorder)), reorder.values, color=gradient, edgecolor="white")
+    ax.set_yticks(range(len(reorder)))
+    ax.set_yticklabels(reorder.index, fontsize=11)
+    ax.set_xlabel("Reorder Rate (%)", fontsize=12, fontweight="bold")
+    ax.set_title("Top 10 Aisles by Reorder Rate", fontsize=14, fontweight="bold")
+    plt.tight_layout()
+    st.pyplot(fig)
+    plt.close()
+
+st.markdown("---")
