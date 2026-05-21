@@ -3,21 +3,14 @@ import pandas as pd
 import os
 import matplotlib.pyplot as plt
 
-#Title and intro
-st.title("Instacart Market Basket Analysis")
-st.markdown("---")
-st.markdown("""
-This dashboard explores customer purchasing behaviour from the Instacart dataset, including department popularity, reorder rates, and basket size analysis.
-""")
-
-# Page configuration
+#Page config
 st.set_page_config(
     page_title="Instacart Market Basket Analysis",
     page_icon="🛒",
     layout="wide"
 )
 
-#Loading the data with parquet
+#Load the data
 parquet_dir = "parquet_data"
 
 @st.cache_data
@@ -28,19 +21,22 @@ def load_data():
     departments_df    = pd.read_parquet(os.path.join(parquet_dir, "departments.parquet"))
     order_products_df = pd.read_parquet(os.path.join(parquet_dir, "order_products_small.parquet"))
 
-    # Build dash_df
     dash_df = order_products_df.merge(products_df[["product_id", "product_name", "aisle_id", "department_id"]], on="product_id", how="left")
     dash_df = dash_df.merge(aisles_df[["aisle_id", "aisle"]], on="aisle_id", how="left")
     dash_df = dash_df.merge(departments_df[["department_id", "department"]], on="department_id", how="left")
     dash_df = dash_df.merge(orders_df[["order_id", "user_id"]], on="order_id", how="left")
-
     return dash_df
 
-#Adding first row
+
+#Title and intro
+st.title("Instacart Market Basket Analysis")
+st.markdown("---")
+st.markdown("This dashboard explores customer purchasing behaviour from the Instacart dataset, including department popularity, reorder rates, and basket size analysis.")
+
+#Row 1
 col1, col2 = st.columns(2)
 
-#Chart 1 - Most Popular Departments (Pie)
-
+#Chart 1 - Most Popular Departments
 with col1:
     st.subheader("Most Popular Departments")
     dept_counts = dash_df.groupby("department")["order_id"].nunique().nlargest(6)
