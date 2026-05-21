@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import os
+import matplotlib.pyplot as plt
 
 #Title and intro
 st.title("Instacart Market Basket Analysis")
@@ -35,8 +36,21 @@ def load_data():
 
     return dash_df
 
-#Load data with spinner - similiar to class
-with st.spinner("Loading data..."):
-    dash_df = load_data()
+#Adding first row
+col1, col2 = st.columns(2)
 
-st.success(f"Data loaded — {len(dash_df):,} records ready.")
+#Chart 1 - Most Popular Departments (Pie)
+
+with col1:
+    st.subheader("Most Popular Departments")
+    dept_counts = dash_df.groupby("department")["order_id"].nunique().nlargest(6)
+    colours = ["#117A65", "#1ABC9C", "#2E86C1", "#5DADE2", "#F39C12", "#E74C3C"]
+    fig, ax = plt.subplots(figsize=(6, 6))
+    ax.pie(dept_counts.values, labels=dept_counts.index, autopct="%.1f%%",
+           wedgeprops={"linewidth": 2, "edgecolor": "white"},
+           textprops={"fontsize": 12, "fontweight": "bold"},
+           colors=colours)
+    ax.set_title("Most Popular Departments", fontsize=14, fontweight="bold")
+    plt.tight_layout()
+    st.pyplot(fig)
+    plt.close()
