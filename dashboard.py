@@ -27,6 +27,9 @@ def load_data():
     dash_df = dash_df.merge(orders_df[["order_id", "user_id"]], on="order_id", how="left")
     return dash_df
 
+#Call load_data and assign to dash_df - from davids uber lesson
+with st.spinner("Loading data..."):
+    dash_df = load_data()
 
 #Title and intro
 st.title("Instacart Market Basket Analysis")
