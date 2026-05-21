@@ -27,7 +27,7 @@ def load_data():
     dash_df = dash_df.merge(orders_df[["order_id", "user_id"]], on="order_id", how="left")
     return dash_df
 
-st.write(dash_df.columns.tolist())
+
 #Title and intro
 st.title("Instacart Market Basket Analysis")
 st.markdown("---")
@@ -39,7 +39,7 @@ col1, col2 = st.columns(2)
 #Chart 1 - Most Popular Departments
 with col1:
     st.subheader("Most Popular Departments")
-    dept_counts = dash_df.groupby("department")["order_id"].nunique().nlargest(6)
+    dept_counts = dash_df.groupby("department")["product_id"].count().nlargest(6)
     colours = ["#117A65", "#1ABC9C", "#2E86C1", "#5DADE2", "#F39C12", "#E74C3C"]
     fig, ax = plt.subplots(figsize=(6, 6))
     ax.pie(dept_counts.values, labels=dept_counts.index, autopct="%.1f%%",
