@@ -27,7 +27,7 @@ def load_data():
     dash_df = dash_df.merge(orders_df[["order_id", "user_id"]], on="order_id", how="left")
     return dash_df
 
-
+st.write(dash_df.columns.tolist())
 #Title and intro
 st.title("Instacart Market Basket Analysis")
 st.markdown("---")
