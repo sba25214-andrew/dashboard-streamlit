@@ -162,10 +162,7 @@ st.markdown("---")
 st.markdown(f"""
 **Content-Based Filtering**
 
-With {df['product_name'].nunique():,} products across {df['department'].nunique():,} departments
-and {df['aisle'].nunique():,} aisles, the dataset has rich product attributes such as name, aisle
-and department. Content-based models use these attributes to recommend similar items to what a
-customer already buys, for example, suggesting other cereals to someone who bought granola.
+st.markdown(f"With **{side_df['product_name'].nunique():,}** products across **{side_df['department'].nunique():,}** departments and **{side_df['aisle'].nunique():,}** aisles, the dataset has rich product attributes such as name, aisle and department. Content-based models use these attributes to recommend similar items to what a customer already buys, for example, suggesting other cereals to someone who bought granola.")
 """)
 st.markdown("---")
 
