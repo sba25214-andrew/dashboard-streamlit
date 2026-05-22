@@ -159,41 +159,23 @@ with col4:
 st.subheader("Why is this data suitable for Machine Learning?")
 st.markdown("---")
 
-st.markdown(f"""
-**Content-Based Filtering**
-
+st.markdown("**Content-Based Filtering**")
 st.markdown(f"With **{side_df['product_name'].nunique():,}** products across **{side_df['department'].nunique():,}** departments and **{side_df['aisle'].nunique():,}** aisles, the dataset has rich product attributes such as name, aisle and department. Content-based models use these attributes to recommend similar items to what a customer already buys, for example, suggesting other cereals to someone who bought granola.")
-""")
+
 st.markdown("---")
 
-st.markdown(f"""
-**Collaborative Filtering (User-User & Item-Item)**
+st.markdown("**Collaborative Filtering (User-User & Item-Item)**")
+st.markdown(f"The dataset contains **{len(side_df):,}** order lines from real customers. This volume of purchase history allows collaborative filtering models to find similarities between customers (user-user) and between products (item-item). The more orders in the data, the more accurate these recommendations become.")
 
-The dataset contains {len(df):,} order lines from real customers. This volume of purchase
-history allows collaborative filtering models to find similarities between customers (user-user)
-and between products (item-item). The more orders in the data, the more accurate these
-recommendations become.
-""")
-st.markdown("---")
-st.markdown("""
-**Market Basket Analysis (Apriori & FP-Growth)**
-
-The reorder rate chart and stacked bar chart above show strong repeat purchasing patterns across
-departments. These are exactly the patterns that Apriori and FP-Growth algorithms detect to find
-products that are frequently bought together, for example, bananas and strawberries appearing
-in the same basket.
-""")
 st.markdown("---")
 
-st.markdown("""
-**Basket Structure**
+st.markdown("**Market Basket Analysis (Apriori & FP-Growth)**")
+st.markdown("The reorder rate chart and stacked bar chart above show strong repeat purchasing patterns across departments. These are exactly the patterns that Apriori and FP-Growth algorithms detect to find products that are frequently bought together, for example, bananas and strawberries appearing in the same basket.")
 
-The basket size chart shows that most orders contain multiple items. This creates the
-co-occurrence data that association rule mining needs, without multiple items per basket,
-there would be no product pairs to discover.
-""")
+st.markdown("---")
 
-    
+st.markdown("**Basket Structure**")
+st.markdown("The basket size chart shows that most orders contain multiple items. This creates the co-occurrence data that association rule mining needs, without multiple items per basket, there would be no product pairs to discover.")
 
 st.markdown("")
 st.markdown("---")
