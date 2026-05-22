@@ -13,7 +13,7 @@ print(f"orders_small.parquet — Size: {os.path.getsize(os.path.join(parquet_out
 
 #Shrink order_products — capped at 30 million rows to stay under 100MB for GitHub
 order_products = pd.read_csv(os.path.join(csv_dir, "order_products_prior.csv"))
-order_products_small = order_products[["order_id", "product_id", "reordered"]].head(30000000)
+order_products_small = order_products[["order_id", "product_id", "reordered"]].head(500000)
 order_products_small.to_parquet(os.path.join(parquet_out, "order_products_small.parquet"), index=False)
 print(f"order_products_small.parquet — Size: {os.path.getsize(os.path.join(parquet_out, 'order_products_small.parquet')) / (1024 * 1024):.1f} MB")
 
