@@ -157,6 +157,7 @@ with col4:
 
 #Why is it suitable for ML
 st.subheader("Why is this data suitable for Machine Learning?")
+st.markdown("*⚠️ Please note the data displayed here is not as large as the total in the overall dataset due to size constraints. A large sample was taken to avoid exceeding Streamlit Community Cloud memory limits.*")
 st.markdown("---")
 
 st.markdown("**Content-Based Filtering**")
