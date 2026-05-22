@@ -10,6 +10,18 @@ st.set_page_config(
     layout="wide"
 )
 
+#Custom CSS for 65+ accessibility (larger text, high contrast, spacing)
+st.markdown("""
+    <style>
+        html, body, [class*="css"] { font-size: 18px !important; }
+        [data-testid="stMetricLabel"] { font-size: 20px !important; font-weight: bold; }
+        [data-testid="stMetricValue"] { font-size: 32px !important; font-weight: bold; color: #117A65; }
+        h1 { font-size: 2.2rem !important; color: #117A65; }
+        h2 { font-size: 1.6rem !important; color: #1a1a2e; }
+        .stMarkdown { line-height: 1.8 !important; }
+    </style>
+""", unsafe_allow_html=True)
+
 #Load the data
 parquet_dir = "parquet_data"
 
@@ -27,13 +39,14 @@ def load_data():
     dash_df = dash_df.merge(orders_df[["order_id", "user_id"]], on="order_id", how="left")
     return dash_df
 
-#Call load_data and assign to dash_df - from davids uber lesson
+#Call load_data and assign to dash_df
 with st.spinner("Fetching your shopping habits..."):
     dash_df = load_data()
 
 #Sidebar filters
-st.sidebar.title("Filters")
-st.sidebar.markdown("---")
+st.sidebar.title("🔍 Filters")
+st.sidebar.markdown("Use these to explore the data.")
+st.sidebar.markdown("")
 
 #Department filter
 all_departments = sorted(dash_df["department"].dropna().unique().tolist())
@@ -75,7 +88,7 @@ col1, col2 = st.columns(2)
 #Chart 1 - Most Popular Departments
 with col1:
     st.subheader("Most Popular Departments")
-    dept_counts = dash_df.groupby("department")["product_id"].count().nlargest(6)
+    dept_counts = side_df.groupby("department")["product_id"].count().nlargest(6)
     colours = ["#117A65", "#1ABC9C", "#2E86C1", "#5DADE2", "#F39C12", "#E74C3C"]
     fig, ax = plt.subplots(figsize=(6, 6))
     ax.pie(dept_counts.values, labels=dept_counts.index, autopct="%.1f%%",
@@ -87,10 +100,10 @@ with col1:
     st.pyplot(fig)
     plt.close()
 
-    #Chart 2 - Top 10 Aisles by Reorder Rate
+#Chart 2 - Top 10 Aisles by Reorder Rate
 with col2:
     st.subheader("Top 10 Aisles by Reorder Rate")
-    reorder = dash_df.groupby("aisle")["reordered"].mean().nlargest(10).sort_values().mul(100)
+    reorder = side_df.groupby("aisle")["reordered"].mean().nlargest(10).sort_values().mul(100)
     gradient = ["#A3E4D7", "#7DCEA0", "#52BE80", "#45B39D", "#27AE60",
                 "#1ABC9C", "#17A589", "#148F77", "#117A65", "#0E6655"]
     fig, ax = plt.subplots(figsize=(6, 5))
@@ -111,7 +124,7 @@ col3, col4 = st.columns(2)
 #Chart 3 - Basket Size
 with col3:
     st.subheader("How Big is a Typical Order?")
-    basket_size = dash_df.groupby("order_id")["product_id"].count()
+    basket_size = side_df.groupby("order_id")["product_id"].count()
     bins   = [0, 5, 10, 15, 20, 25, 100]
     labels = ["1-5", "6-10", "11-15", "16-20", "21-25", "26+"]
     basket_bins = pd.cut(basket_size, bins=bins, labels=labels).value_counts().reindex(labels)
@@ -126,10 +139,10 @@ with col3:
     plt.close()
     st.caption(f"Average basket size: {basket_size.mean():.0f} items")
 
-    #Chart 4 - Reordered vs First-Time by Department
+#Chart 4 - Reordered vs First-Time by Department
 with col4:
     st.subheader("Reordered vs First-Time by Department")
-    department_data = dash_df.groupby("department")["reordered"].value_counts().unstack().fillna(0).nlargest(8, 1)
+    department_data = side_df.groupby("department")["reordered"].value_counts().unstack().fillna(0).nlargest(8, 1)
     fig, ax = plt.subplots(figsize=(6, 5))
     department_data.plot(kind="barh", stacked=True, ax=ax,
                          color=["#BDC3C7", "#117A65"], edgecolor="white")
@@ -142,4 +155,49 @@ with col4:
     st.pyplot(fig)
     plt.close()
 
+#Why is it suitable for ML
+st.subheader("Why is this data suitable for Machine Learning?")
 st.markdown("---")
+
+st.markdown(f"""
+**Content-Based Filtering**
+
+With {df['product_name'].nunique():,} products across {df['department'].nunique():,} departments
+and {df['aisle'].nunique():,} aisles, the dataset has rich product attributes such as name, aisle
+and department. Content-based models use these attributes to recommend similar items to what a
+customer already buys, for example, suggesting other cereals to someone who bought granola.
+""")
+st.markdown("---")
+
+st.markdown(f"""
+**Collaborative Filtering (User-User & Item-Item)**
+
+The dataset contains {len(df):,} order lines from real customers. This volume of purchase
+history allows collaborative filtering models to find similarities between customers (user-user)
+and between products (item-item). The more orders in the data, the more accurate these
+recommendations become.
+""")
+st.markdown("---")
+st.markdown("""
+**Market Basket Analysis (Apriori & FP-Growth)**
+
+The reorder rate chart and stacked bar chart above show strong repeat purchasing patterns across
+departments. These are exactly the patterns that Apriori and FP-Growth algorithms detect to find
+products that are frequently bought together, for example, bananas and strawberries appearing
+in the same basket.
+""")
+st.markdown("---")
+
+st.markdown("""
+**Basket Structure**
+
+The basket size chart shows that most orders contain multiple items. This creates the
+co-occurrence data that association rule mining needs, without multiple items per basket,
+there would be no product pairs to discover.
+""")
+
+    
+
+st.markdown("")
+st.markdown("---")
+st.caption("🔎 Dashboard designed for adults aged 65+ | CA2 - Data Visualisation Techniques | Designed by SBA25214 ❤️ |  🏛️ CCT College Dublin 2026")
