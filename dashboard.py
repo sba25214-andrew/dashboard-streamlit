@@ -5,10 +5,22 @@ import matplotlib.pyplot as plt
 
 #Page config
 st.set_page_config(
-    page_title="Instacart Market Basket Analysis",
+    page_title=" 🍍🍎🍓🍇 Instacart Market Basket Analysis",
     page_icon="🛒",
     layout="wide"
 )
+
+#Custom CSS for 65+ accessibility (larger text, high contrast, spacing)
+st.markdown("""
+    <style>
+        html, body, [class*="css"] { font-size: 18px !important; }
+        [data-testid="stMetricLabel"] { font-size: 20px !important; font-weight: bold; }
+        [data-testid="stMetricValue"] { font-size: 32px !important; font-weight: bold; color: #117A65; }
+        h1 { font-size: 2.2rem !important; color: #117A65; }
+        h2 { font-size: 1.6rem !important; color: #1a1a2e; }
+        .stMarkdown { line-height: 1.8 !important; }
+    </style>
+""", unsafe_allow_html=True)
 
 #Load the data
 parquet_dir = "parquet_data"
@@ -32,8 +44,9 @@ with st.spinner("Fetching your shopping habits..."):
     dash_df = load_data()
 
 #Sidebar filters
-st.sidebar.title("Filters")
-st.sidebar.markdown("---")
+st.sidebar.title("🔍 Filters")
+st.sidebar.markdown("Use these to explore the data.")
+st.sidebar.markdown("")
 
 #Department filter
 all_departments = sorted(dash_df["department"].dropna().unique().tolist())
@@ -142,4 +155,6 @@ with col4:
     st.pyplot(fig)
     plt.close()
 
+st.markdown("")
 st.markdown("---")
+st.caption("🔎 Dashboard designed for adults aged 65+ | CA2 - Data Visualisation Techniques | Designed by SBA25214 ❤️ |  🏛️ CCT College Dublin 2026")
