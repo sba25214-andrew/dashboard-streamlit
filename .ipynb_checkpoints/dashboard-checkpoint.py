@@ -166,7 +166,7 @@ st.markdown(f"With **{side_df['product_name'].nunique():,}** products across **{
 st.markdown("---")
 
 st.markdown("**Collaborative Filtering (User-User & Item-Item)**")
-st.markdown(f"The dataset contains **{len(side_df):,}** order lines from real customers. This volume of purchase history allows collaborative filtering models to find similarities between customers (user-user) and between products (item-item). The more orders in the data, the more accurate these recommendations become.")
+st.markdown(f"The dataset the dashboard uses, contains **{len(side_df):,}** order lines from real customers. This volume of purchase history allows collaborative filtering models to find similarities between customers (user-user) and between products (item-item). The more orders in the data, the more accurate these recommendations become.")
 
 st.markdown("---")
 
@@ -176,7 +176,7 @@ st.markdown("The reorder rate chart and stacked bar chart above show strong repe
 st.markdown("---")
 
 st.markdown("**Basket Structure**")
-st.markdown("The basket size chart shows that most orders contain multiple items. This creates the co-occurrence data that association rule mining needs, without multiple items per basket, there would be no product pairs to discover.")
+st.markdown("The basket size chart shows that most orders contain multiple items. This creates the co-occurrence data that association rule mining needs. Without multiple items per basket, there would be no product pairs to discover.")
 
 st.markdown("")
 st.markdown("---")
