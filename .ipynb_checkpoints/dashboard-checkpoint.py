@@ -61,12 +61,11 @@ selected_departments = st.sidebar.multiselect(
 )
 
 #aisle filters
-#Department filter
-all_aisles = sorted(dash_df["aisles"].dropna().unique().tolist())
-selected_aisles = st.sidebar.multiselect(
-    "Select Aisles",
-    options=all_aisles,
-    default=all_aisles
+all_aisle = sorted(dash_df["aisle"].dropna().unique().tolist())
+selected_aisle = st.sidebar.multiselect(
+    "Select Aisle",
+    options=all_aisle,
+    default=all_aisle
 )
 
 #Show record count
