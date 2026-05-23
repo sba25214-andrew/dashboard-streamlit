@@ -79,7 +79,7 @@ st.sidebar.metric("Records in view", f"{len(side_df):,}")
 
 #Title and intro
 st.title("Instacart Market Basket Analysis")
-st.markdown("---")
+st.divider()
 st.markdown("This dashboard explores customer purchasing behaviour from the Instacart dataset, including department popularity, reorder rates, and basket size analysis.")
 
 #Chart 1 - Top 10 Most Ordered Products
@@ -188,4 +188,5 @@ st.markdown("The basket size chart shows that most orders contain multiple items
 st.markdown("")
 st.markdown("---")
 st.markdown("*⚠️ Please note the data displayed here is not as large as the total in the overall dataset due to size constraints. A large sample was taken to avoid exceeding Streamlit Community Cloud memory limits.*")
+st.markdown("---")
 st.caption("🔎 Dashboard designed for adults aged 65+ | CA2 - Data Visualisation Techniques | Designed by SBA25214 ❤️ |  🏛️ CCT College Dublin 2026")
