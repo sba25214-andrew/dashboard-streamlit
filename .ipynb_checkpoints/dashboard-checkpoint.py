@@ -3,14 +3,14 @@ import pandas as pd
 import os
 import matplotlib.pyplot as plt
 
-#Page config
+# Page config
 st.set_page_config(
     page_title="Instacart Market Basket Analysis",
     page_icon="🛒",
     layout="wide"
 )
 
-#Custom CSS for 65+ accessibility (larger text, high contrast, spacing)
+# Custom CSS for 65+ accessibility
 st.markdown("""
     <style>
         html, body, [class*="css"] { font-size: 18px !important; }
@@ -26,7 +26,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-#Load the data
+# Load the data
 parquet_dir = "parquet_data"
 
 @st.cache_data
@@ -43,16 +43,14 @@ def load_data():
     dash_df = dash_df.merge(orders_df[["order_id", "user_id"]], on="order_id", how="left")
     return dash_df
 
-#Call load_data and assign to dash_df
 with st.spinner("Fetching your shopping habits..."):
     dash_df = load_data()
 
-#Sidebar filters
+# Sidebar filters
 st.sidebar.title("🔍 Filters")
 st.sidebar.markdown("Use these to explore the data.")
 st.sidebar.markdown("")
 
-#Department filter
 all_departments = sorted(dash_df[dash_df["department"] != "missing"]["department"].dropna().unique().tolist())
 selected_departments = st.sidebar.multiselect(
     "Select Departments",
@@ -60,22 +58,20 @@ selected_departments = st.sidebar.multiselect(
     default=all_departments
 )
 
-#Apply filters to dash_df
 side_df = dash_df[dash_df["department"] != "missing"].copy()
 
 if selected_departments:
     side_df = side_df[side_df["department"].isin(selected_departments)]
 
-#Show record count
 st.sidebar.divider()
 st.sidebar.metric("Records in view", f"{len(side_df):,}")
 
-#Title and intro
+# Title and intro
 st.title("Instacart Market Basket Analysis")
 st.markdown("This dashboard explores customer purchasing behaviour from the Instacart dataset, including department popularity, reorder rates, and basket size analysis.")
 st.divider()
 
-#KPI metrics row
+# KPI metrics row
 col_m1, col_m2, col_m3, col_m4 = st.columns(4)
 
 with col_m1:
@@ -90,9 +86,10 @@ with col_m3:
 with col_m4:
     avg_basket = side_df.groupby("order_id")["product_id"].count().mean()
     st.metric("Avg Basket Size", f"{avg_basket:.0f} items")
+
 st.divider()
 
-#Chart 1 - Top 10 Most Ordered Products
+# Chart 1 - Top 10 Most Ordered Products
 top10 = side_df.groupby("product_name")["order_id"].count().nlargest(10).sort_values()
 fig, ax = plt.subplots(figsize=(10, 5))
 ax.barh(top10.index, top10.values, color="#117A65", edgecolor="white")
@@ -104,10 +101,9 @@ st.pyplot(fig)
 plt.close()
 st.divider()
 
-#Row 2
+# Row 2
 col2, col3 = st.columns(2)
 
-#Chart 2 - Most Popular Departments
 with col2:
     dept_counts = side_df.groupby("department")["product_id"].count().nlargest(6)
     colours = ["#117A65", "#1ABC9C", "#2E86C1", "#5DADE2", "#F39C12", "#E74C3C"]
@@ -121,7 +117,6 @@ with col2:
     st.pyplot(fig)
     plt.close()
 
-#Chart 3 - Top 10 Aisles by Reorder Rate
 with col3:
     reorder = side_df.groupby("aisle")["reordered"].mean().nlargest(10).sort_values().mul(100)
     gradient = ["#A3E4D7", "#7DCEA0", "#52BE80", "#45B39D", "#27AE60",
@@ -138,10 +133,9 @@ with col3:
 
 st.divider()
 
-#Row 3
+# Row 3
 col4, col5 = st.columns(2)
 
-#Chart 4 - Basket Size
 with col4:
     basket_size = side_df.groupby("order_id")["product_id"].count()
     bins   = [0, 5, 10, 15, 20, 25, 100]
@@ -158,7 +152,6 @@ with col4:
     plt.close()
     st.caption(f"Average basket size: {basket_size.mean():.0f} items")
 
-#Chart 5 - Reordered vs First-Time by Department
 with col5:
     department_data = side_df.groupby("department")["reordered"].value_counts().unstack().fillna(0).nlargest(8, 1)
     fig, ax = plt.subplots(figsize=(6, 5))
@@ -173,17 +166,11 @@ with col5:
     st.pyplot(fig)
     plt.close()
 
-#Why is it suitable for ML
+st.divider()
+
+# Why is it suitable for ML
 st.subheader("Why is this data suitable for Machine Learning?")
 
-tab1, tab2, tab3, tab4 = st.tabs([
-    "Content-Based Filtering",
-    "Collaborative Filtering",
-    "Market Basket Analysis",
-    "Basket Structure"
-])
-
-pythonst.subheader("Why is this data suitable for Machine Learning?")
 tab1, tab2, tab3, tab4 = st.tabs([
     "Content-Based Filtering",
     "Collaborative Filtering",
@@ -225,7 +212,6 @@ with tab2:
     )
 
 with tab3:
-    avg_reorder = side_df['reordered'].mean() * 100
     high_reorder_depts = (
         side_df.groupby('department')['reordered'].mean()
         .mul(100)
@@ -263,8 +249,7 @@ with tab4:
     )
 
 with st.container(border=True):
-    st.write("🔎 Dashboard designed for adults aged 65+ | CA2 - Data Visualisation Techniques | Designed by SBA25214 ❤️ |  🏛️ CCT College Dublin 2026")
+    st.write("🔎 Dashboard designed for adults aged 65+ | CA2 - Data Visualisation Techniques | Designed by SBA25214 ❤️ | 🏛️ CCT College Dublin 2026")
 
-
-#https://docs.streamlit.io/develop/quick-reference/cheat-sheet
-#https://cheat-sheet.streamlit.app/
+# https://docs.streamlit.io/develop/quick-reference/cheat-sheet
+# https://cheat-sheet.streamlit.app/
