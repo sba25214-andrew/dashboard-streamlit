@@ -53,7 +53,7 @@ st.sidebar.markdown("Use these to explore the data.")
 st.sidebar.markdown("")
 
 #Department filter
-all_departments = sorted(dash_df["department"].dropna().unique().tolist())
+all_departments = sorted(dash_df["department"]!= "missing"]["department"].dropna().unique().tolist())
 selected_departments = st.sidebar.multiselect(
     "Select Departments",
     options=all_departments,
