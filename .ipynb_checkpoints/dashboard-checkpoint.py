@@ -93,7 +93,7 @@ ax.tick_params(axis="both", labelsize=13)
 plt.tight_layout()
 st.pyplot(fig)
 plt.close()
-
+st.markdown("---")
 
 #Row 2
 col2, col3 = st.columns(2)
