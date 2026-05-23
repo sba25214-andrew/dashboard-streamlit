@@ -82,23 +82,17 @@ st.title("Instacart Market Basket Analysis")
 st.markdown("---")
 st.markdown("This dashboard explores customer purchasing behaviour from the Instacart dataset, including department popularity, reorder rates, and basket size analysis.")
 
-#Row 1
-col1 = st.columns(1)
-
-#Chart 1: Top 15 Most Frequent Itemsets
-with col1:
-    st.subheader("Top 15 Most Frequent Itemsets")
-    top_15 = frequent_itemsets_ap.sort_values("support", ascending=False).head(15)
-    top_15["item_label"] = top_15["itemsets"].apply(lambda x: ", ".join(list(x)))
-
-    fig, ax = plt.subplots(figsize=(12, 6))
-    ax.barh(top_15["item_label"], top_15["support"], color="teal")
-    ax.set_xlabel("Support")
-    ax.set_title("Top 15 Most Frequent Itemsets (Apriori)")
-    ax.grid(axis='x', linestyle='--', alpha=0.5, color='gray')
-    ax.invert_yaxis()
-    plt.tight_layout()
-    plt.show()
+#Chart 1 - Top 10 Most Ordered Products
+st.subheader("Top 10 Most Ordered Products")
+top10 = side_df.groupby("product_name")["order_id"].count().nlargest(10).sort_values()
+fig, ax = plt.subplots(figsize=(10, 5))
+ax.barh(top10.index, top10.values, color="#117A65", edgecolor="white")
+ax.set_xlabel("Times Ordered", fontsize=14, fontweight="bold")
+ax.set_title("Top 10 Most Ordered Products", fontsize=18, fontweight="bold")
+ax.tick_params(axis="both", labelsize=13)
+plt.tight_layout()
+st.pyplot(fig)
+plt.close()
 
 
 #Row 2
@@ -138,7 +132,7 @@ with col3:
 st.markdown("---")
 
 #Row 3
-col5, col6 = st.columns(2)
+col4, col5 = st.columns(2)
 
 #Chart 4 - Basket Size
 with col4:
