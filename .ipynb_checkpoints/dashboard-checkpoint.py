@@ -181,28 +181,24 @@ with col5:
 
 #Why is it suitable for ML
 st.subheader("Why is this data suitable for Machine Learning?")
-st.divider()
 
-st.markdown("**Content-Based Filtering**")
-st.markdown(f"With **{side_df['product_name'].nunique():,}** products across **{side_df['department'].nunique():,}** departments and **{side_df['aisle'].nunique():,}** aisles, the dataset has rich product attributes such as name, aisle and department. Content-based models use these attributes to recommend similar items to what a customer already buys, for example, suggesting other cereals to someone who bought granola.")
+tab1, tab2, tab3, tab4 = st.tabs([
+    "Content-Based Filtering",
+    "Collaborative Filtering",
+    "Market Basket Analysis",
+    "Basket Structure"
+])
 
-st.divider()
+with tab1:
+    st.markdown(f"With **{side_df['product_name'].nunique():,}** products across **{side_df['department'].nunique():,}** departments and **{side_df['aisle'].nunique():,}** aisles, the dataset has rich product attributes such as name, aisle and department. Content-based models use these attributes to recommend similar items to what a customer already buys, for example, suggesting other cereals to someone who bought granola.")
 
-st.markdown("**Collaborative Filtering (User-User & Item-Item)**")
-st.markdown(f"The dataset the dashboard uses, contains **{len(side_df):,}** order lines from real customers. This volume of purchase history allows collaborative filtering models to find similarities between customers (user-user) and between products (item-item). The more orders in the data, the more accurate these recommendations become.")
+with tab2:
+    st.markdown(f"The dataset the dashboard uses contains **{len(side_df):,}** order lines from real customers. This volume of purchase history allows collaborative filtering models to find similarities between customers (user-user) and between products (item-item). The more orders in the data, the more accurate these recommendations become.")
 
-st.divider()
+with tab3:
+    st.markdown("The reorder rate chart and stacked bar chart above show strong repeat purchasing patterns across departments. These are exactly the patterns that Apriori and FP-Growth algorithms detect to find products that are frequently bought together, for example, bananas and strawberries appearing in the same basket.")
 
-st.markdown("**Market Basket Analysis (Apriori & FP-Growth)**")
-st.markdown("The reorder rate chart and stacked bar chart above show strong repeat purchasing patterns across departments. These are exactly the patterns that Apriori and FP-Growth algorithms detect to find products that are frequently bought together, for example, bananas and strawberries appearing in the same basket.")
-
-st.divider()
-
-st.markdown("**Basket Structure**")
-st.markdown("The basket size chart shows that most orders contain multiple items. This creates the co-occurrence data that association rule mining needs. Without multiple items per basket, there would be no product pairs to discover.")
-
-st.markdown("")
-st.divider()
-st.markdown("*⚠️ Please note the data displayed here is not as large as the total in the overall dataset due to size constraints. A large sample was taken to avoid exceeding Streamlit Community Cloud memory limits.*")
+with tab4:
+    st.markdown("The basket size chart shows that most orders contain multiple items. This creates the co-occurrence data that association rule mining needs. Without multiple items per basket, there would be no product pairs to discover.")
 st.divider()
 st.caption("🔎 Dashboard designed for adults aged 65+ | CA2 - Data Visualisation Techniques | Designed by SBA25214 ❤️ |  🏛️ CCT College Dublin 2026")
