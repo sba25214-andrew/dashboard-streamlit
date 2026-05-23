@@ -60,13 +60,6 @@ selected_departments = st.sidebar.multiselect(
     default=all_departments
 )
 
-#Aisle filter
-all_aisle = sorted(dash_df["aisle"].dropna().unique().tolist())
-selected_aisle = st.sidebar.multiselect(
-    "Select Aisle",
-    options=all_aisle,
-    default=all_aisle
-)
 
 #Apply filters to dash_df
 side_df = dash_df.copy()
