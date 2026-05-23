@@ -183,17 +183,88 @@ tab1, tab2, tab3, tab4 = st.tabs([
     "Basket Structure"
 ])
 
+pythonst.subheader("Why is this data suitable for Machine Learning?")
+tab1, tab2, tab3, tab4 = st.tabs([
+    "Content-Based Filtering",
+    "Collaborative Filtering",
+    "Market Basket Analysis",
+    "Data Volume & Density"
+])
+
 with tab1:
-    st.markdown(f"With **{side_df['product_name'].nunique():,}** products across **{side_df['department'].nunique():,}** departments and **{side_df['aisle'].nunique():,}** aisles, the dataset has rich product attributes such as name, aisle and department. Content-based models use these attributes to recommend similar items to what a customer already buys, for example, suggesting other cereals to someone who bought granola.")
+    st.markdown(
+        f"With **{side_df['product_name'].nunique():,}** products across "
+        f"**{side_df['department'].nunique():,}** departments and "
+        f"**{side_df['aisle'].nunique():,}** aisles, the dataset has rich product "
+        f"attributes that content-based models can learn from. These attributes are "
+        f"converted into numerical representations — for example, product names can be "
+        f"vectorised using TF-IDF, while department and aisle become categorical features. "
+        f"A model trained on these vectors can recommend similar items to what a customer "
+        f"already buys: someone who purchases granola is likely to be interested in other "
+        f"cereals or snack bars from the same aisle, without needing to know anything about "
+        f"other customers."
+    )
 
 with tab2:
-    st.markdown(f"The dataset the dashboard uses contains **{len(side_df):,}** order lines from real customers. This volume of purchase history allows collaborative filtering models to find similarities between customers (user-user) and between products (item-item). The more orders in the data, the more accurate these recommendations become.")
+    reorder_rate = side_df['reordered'].mean() * 100
+    unique_users = side_df['user_id'].nunique() if 'user_id' in side_df.columns else None
+    user_line = f"from **{unique_users:,}** unique customers " if unique_users else ""
+
+    st.markdown(
+        f"The dataset contains **{len(side_df):,}** order lines {user_line}— enough "
+        f"purchase history for collaborative filtering models to identify meaningful "
+        f"patterns. User-user filtering finds customers with similar buying habits and "
+        f"recommends what those customers bought next. Item-item filtering finds products "
+        f"that are consistently bought by the same people, regardless of who those people are. "
+        f"One challenge with collaborative filtering is **sparsity** — with "
+        f"**{side_df['product_name'].nunique():,}** products, most customers have only "
+        f"purchased a small fraction of the catalogue. However, the high reorder rate of "
+        f"**{reorder_rate:.1f}%** means customers return to the same products repeatedly, "
+        f"which creates denser, more reliable interaction patterns than a typical one-off "
+        f"purchase dataset."
+    )
 
 with tab3:
-    st.markdown("The reorder rate chart and stacked bar chart above show strong repeat purchasing patterns across departments. These are exactly the patterns that Apriori and FP-Growth algorithms detect to find products that are frequently bought together, for example, bananas and strawberries appearing in the same basket.")
+    avg_reorder = side_df['reordered'].mean() * 100
+    high_reorder_depts = (
+        side_df.groupby('department')['reordered'].mean()
+        .mul(100)
+        .gt(50)
+        .sum()
+    )
+    st.markdown(
+        f"Association rule mining algorithms like Apriori and FP-Growth look for products "
+        f"that appear together in baskets more often than chance would predict. This dataset "
+        f"is well-suited for this because **{high_reorder_depts}** out of "
+        f"**{side_df['department'].nunique():,}** departments have an average reorder rate "
+        f"above 50%, as shown in the charts above. High reorder rates signal consistent, "
+        f"habitual purchasing — exactly the behaviour these algorithms are designed to detect. "
+        f"A rule like *'customers who buy bananas also buy strawberries'* only becomes "
+        f"statistically reliable when those items appear together across thousands of "
+        f"independent baskets, which this dataset provides."
+    )
 
 with tab4:
-    st.markdown("The basket size chart shows that most orders contain multiple items. This creates the co-occurrence data that association rule mining needs. Without multiple items per basket, there would be no product pairs to discover.")
+    avg_basket = side_df.groupby('order_id')['product_id'].count().mean()
+    multi_item_pct = (
+        side_df.groupby('order_id')['product_id'].count().gt(1).mean() * 100
+    )
+    st.markdown(
+        f"Three properties make this dataset particularly strong for ML at scale. "
+        f"**Scale:** with **{len(side_df):,}** order lines, there are enough examples for "
+        f"models to generalise rather than memorise. **Basket depth:** the average order "
+        f"contains **{avg_basket:.1f}** items, and **{multi_item_pct:.1f}%** of orders "
+        f"contain more than one item — without this, co-occurrence mining would be "
+        f"impossible. **Repeat behaviour:** a reorder rate of "
+        f"**{side_df['reordered'].mean() * 100:.1f}%** means the data captures genuine "
+        f"preferences rather than one-off purchases, which makes both recommendation and "
+        f"prediction tasks more reliable. Together, these properties mean the dataset "
+        f"supports all three ML approaches described in the other tabs."
+    )
 
 with st.container(border=True):
     st.write("🔎 Dashboard designed for adults aged 65+ | CA2 - Data Visualisation Techniques | Designed by SBA25214 ❤️ |  🏛️ CCT College Dublin 2026")
+
+
+#https://docs.streamlit.io/develop/quick-reference/cheat-sheet
+#https://cheat-sheet.streamlit.app/
