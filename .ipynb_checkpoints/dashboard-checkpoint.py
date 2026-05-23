@@ -194,5 +194,8 @@ with tab3:
 
 with tab4:
     st.markdown("The basket size chart shows that most orders contain multiple items. This creates the co-occurrence data that association rule mining needs. Without multiple items per basket, there would be no product pairs to discover.")
+	
 st.divider()
+with st.container(border=True):
+    st.write("Bordered container")
 st.caption("🔎 Dashboard designed for adults aged 65+ | CA2 - Data Visualisation Techniques | Designed by SBA25214 ❤️ |  🏛️ CCT College Dublin 2026")
