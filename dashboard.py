@@ -60,7 +60,7 @@ selected_departments = st.sidebar.multiselect(
     default=all_departments
 )
 
-#aisle filters
+#Aisle filter
 all_aisle = sorted(dash_df["aisle"].dropna().unique().tolist())
 selected_aisle = st.sidebar.multiselect(
     "Select Aisle",
@@ -68,12 +68,24 @@ selected_aisle = st.sidebar.multiselect(
     default=all_aisle
 )
 
+#Apply filters to dash_df
+side_df = dash_df.copy()
+
+if selected_departments:
+    side_df = side_df[side_df["department"].isin(selected_departments)]
+
+if selected_aisle:
+    side_df = side_df[side_df["aisle"].isin(selected_aisle)]
+
+#Show record count
+st.sidebar.divider()
+st.sidebar.metric("Records in view", f"{len(side_df):,}")
 
 #Title and intro
 st.title("Instacart Market Basket Analysis")
-st.markdown("This dashboard explores customer purchasing behaviourproducts ac from the Instacart dataset, including department popularity, reorder rates, and basket size analysis.")
-
+st.markdown("This dashboard explores customer purchasing behaviour from the Instacart dataset, including department popularity, reorder rates, and basket size analysis.")
 st.divider()
+
 #KPI metrics row
 col_m1, col_m2, col_m3, col_m4 = st.columns(4)
 
