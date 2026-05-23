@@ -80,8 +80,25 @@ st.sidebar.metric("Records in view", f"{len(side_df):,}")
 #Title and intro
 st.title("Instacart Market Basket Analysis")
 st.divider()
-st.markdown("This dashboard explores customer purchasing behaviour from the Instacart dataset, including department popularity, reorder rates, and basket size analysis.")
+st.markdown("This dashboard explores customer purchasing behaviourproducts ac from the Instacart dataset, including department popularity, reorder rates, and basket size analysis.")
 
+st.divider()
+#KPI metrics row
+col_m1, col_m2, col_m3, col_m4 = st.columns(4)
+
+with col_m1:
+    st.metric("Total Orders", f"{side_df['order_id'].nunique():,}")
+
+with col_m2:
+    st.metric("Total Products", f"{side_df['product_name'].nunique():,}")
+
+with col_m3:
+    st.metric("Departments", f"{side_df['department'].nunique():,}")
+
+with col_m4:
+    avg_basket = side_df.groupby("order_id")["product_id"].count().mean()
+    st.metric("Avg Basket Size", f"{avg_basket:.0f} items")
+st.divider()
 #Chart 1 - Top 10 Most Ordered Products
 top10 = side_df.groupby("product_name")["order_id"].count().nlargest(10).sort_values()
 fig, ax = plt.subplots(figsize=(10, 5))
@@ -92,7 +109,7 @@ ax.tick_params(axis="both", labelsize=13)
 plt.tight_layout()
 st.pyplot(fig)
 plt.close()
-st.markdown("---")
+st.divider()
 
 #Row 2
 col2, col3 = st.columns(2)
@@ -126,7 +143,7 @@ with col3:
     st.pyplot(fig)
     plt.close()
 
-st.markdown("---")
+st.divider()
 
 #Row 3
 col4, col5 = st.columns(2)
@@ -165,28 +182,28 @@ with col5:
 
 #Why is it suitable for ML
 st.subheader("Why is this data suitable for Machine Learning?")
-st.markdown("---")
+st.divider()
 
 st.markdown("**Content-Based Filtering**")
 st.markdown(f"With **{side_df['product_name'].nunique():,}** products across **{side_df['department'].nunique():,}** departments and **{side_df['aisle'].nunique():,}** aisles, the dataset has rich product attributes such as name, aisle and department. Content-based models use these attributes to recommend similar items to what a customer already buys, for example, suggesting other cereals to someone who bought granola.")
 
-st.markdown("---")
+st.divider()
 
 st.markdown("**Collaborative Filtering (User-User & Item-Item)**")
 st.markdown(f"The dataset the dashboard uses, contains **{len(side_df):,}** order lines from real customers. This volume of purchase history allows collaborative filtering models to find similarities between customers (user-user) and between products (item-item). The more orders in the data, the more accurate these recommendations become.")
 
-st.markdown("---")
+st.divider()
 
 st.markdown("**Market Basket Analysis (Apriori & FP-Growth)**")
 st.markdown("The reorder rate chart and stacked bar chart above show strong repeat purchasing patterns across departments. These are exactly the patterns that Apriori and FP-Growth algorithms detect to find products that are frequently bought together, for example, bananas and strawberries appearing in the same basket.")
 
-st.markdown("---")
+st.divider()
 
 st.markdown("**Basket Structure**")
 st.markdown("The basket size chart shows that most orders contain multiple items. This creates the co-occurrence data that association rule mining needs. Without multiple items per basket, there would be no product pairs to discover.")
 
 st.markdown("")
-st.markdown("---")
+st.divider()
 st.markdown("*⚠️ Please note the data displayed here is not as large as the total in the overall dataset due to size constraints. A large sample was taken to avoid exceeding Streamlit Community Cloud memory limits.*")
-st.markdown("---")
+st.divider()
 st.caption("🔎 Dashboard designed for adults aged 65+ | CA2 - Data Visualisation Techniques | Designed by SBA25214 ❤️ |  🏛️ CCT College Dublin 2026")
