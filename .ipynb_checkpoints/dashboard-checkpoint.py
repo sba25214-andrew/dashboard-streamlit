@@ -197,5 +197,5 @@ with tab4:
 	
 st.divider()
 with st.container(border=True):
-    st.write("Bordered container")
+    st.write("Bordered containers")
 st.caption("🔎 Dashboard designed for adults aged 65+ | CA2 - Data Visualisation Techniques | Designed by SBA25214 ❤️ |  🏛️ CCT College Dublin 2026")
