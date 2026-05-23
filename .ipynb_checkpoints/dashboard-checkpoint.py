@@ -19,6 +19,10 @@ st.markdown("""
         h1 { font-size: 2.2rem !important; color: #117A65; }
         h2 { font-size: 1.6rem !important; color: #1a1a2e; }
         .stMarkdown { line-height: 1.8 !important; }
+        .stTabs [data-baseweb="tab-list"] { gap: 10px; }
+        .stTabs [data-baseweb="tab"] { font-size: 18px !important; font-weight: bold; padding: 10px 20px; }
+        .stTabs [data-baseweb="tab-panel"] { font-size: 18px !important; line-height: 1.8 !important; padding-top: 20px; }
+        .stTabs [data-baseweb="tab-panel"] p { font-size: 18px !important; }
     </style>
 """, unsafe_allow_html=True)
 
@@ -56,22 +60,14 @@ selected_departments = st.sidebar.multiselect(
     default=all_departments
 )
 
-#Reorder filter for orders
-reorder_filter = st.sidebar.radio(
-    "Order Type",
-    options=["All", "Reordered Only", "First Time Only"]
+#aisle filters
+#Department filter
+all_aisles = sorted(dash_df["aisles"].dropna().unique().tolist())
+selected_aisles = st.sidebar.multiselect(
+    "Select Aisles",
+    options=all_aisles,
+    default=all_aisles
 )
-
-#Apply the sidebar filters to dash_df
-side_df = dash_df.copy()
-
-if selected_departments:
-    side_df = side_df[side_df["department"].isin(selected_departments)]
-
-if reorder_filter == "Reordered Only":
-    side_df = side_df[side_df["reordered"] == 1]
-elif reorder_filter == "First Time Only":
-    side_df = side_df[side_df["reordered"] == 0]
 
 #Show record count
 st.sidebar.markdown("---")
@@ -98,6 +94,7 @@ with col_m4:
     avg_basket = side_df.groupby("order_id")["product_id"].count().mean()
     st.metric("Avg Basket Size", f"{avg_basket:.0f} items")
 st.divider()
+
 #Chart 1 - Top 10 Most Ordered Products
 top10 = side_df.groupby("product_name")["order_id"].count().nlargest(10).sort_values()
 fig, ax = plt.subplots(figsize=(10, 5))
