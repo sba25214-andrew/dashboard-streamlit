@@ -61,7 +61,7 @@ selected_departments = st.sidebar.multiselect(
 )
 
 #Apply filters to dash_df
-side_df = dash_df.copy()
+side_df = dash_df[dash_df["department"] != "missing"].copy()
 
 if selected_departments:
     side_df = side_df[side_df["department"].isin(selected_departments)]
