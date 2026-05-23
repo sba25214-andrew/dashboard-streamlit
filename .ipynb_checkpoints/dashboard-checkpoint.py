@@ -60,15 +60,11 @@ selected_departments = st.sidebar.multiselect(
     default=all_departments
 )
 
-
 #Apply filters to dash_df
 side_df = dash_df.copy()
 
 if selected_departments:
     side_df = side_df[side_df["department"].isin(selected_departments)]
-
-if selected_aisle:
-    side_df = side_df[side_df["aisle"].isin(selected_aisle)]
 
 #Show record count
 st.sidebar.divider()
