@@ -87,18 +87,18 @@ col1 = st.columns(1)
 
 #Chart 1: Top 15 Most Frequent Itemsets
 with col1:
-st.subheader("Top 15 Most Frequent Itemsets")
-top_15 = frequent_itemsets_ap.sort_values("support", ascending=False).head(15)
-top_15["item_label"] = top_15["itemsets"].apply(lambda x: ", ".join(list(x)))
+    st.subheader("Top 15 Most Frequent Itemsets")
+    top_15 = frequent_itemsets_ap.sort_values("support", ascending=False).head(15)
+    top_15["item_label"] = top_15["itemsets"].apply(lambda x: ", ".join(list(x)))
 
-fig, ax = plt.subplots(figsize=(12, 6))
-ax.barh(top_15["item_label"], top_15["support"], color="teal")
-ax.set_xlabel("Support")
-ax.set_title("Top 15 Most Frequent Itemsets (Apriori)")
-ax.grid(axis='x', linestyle='--', alpha=0.5, color='gray')
-ax.invert_yaxis()
-plt.tight_layout()
-plt.show()
+    fig, ax = plt.subplots(figsize=(12, 6))
+    ax.barh(top_15["item_label"], top_15["support"], color="teal")
+    ax.set_xlabel("Support")
+    ax.set_title("Top 15 Most Frequent Itemsets (Apriori)")
+    ax.grid(axis='x', linestyle='--', alpha=0.5, color='gray')
+    ax.invert_yaxis()
+    plt.tight_layout()
+    plt.show()
 
 
 #Row 2
