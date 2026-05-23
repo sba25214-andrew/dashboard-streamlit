@@ -85,8 +85,8 @@ st.markdown("This dashboard explores customer purchasing behaviour from the Inst
 #Row 1
 col1 = st.columns(1)
 
-with col1:
 #Chart 1: Top 15 Most Frequent Itemsets
+with col1:
 st.subheader("Top 15 Most Frequent Itemsets")
 top_15 = frequent_itemsets_ap.sort_values("support", ascending=False).head(15)
 top_15["item_label"] = top_15["itemsets"].apply(lambda x: ", ".join(list(x)))
