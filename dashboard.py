@@ -79,7 +79,6 @@ st.sidebar.metric("Records in view", f"{len(side_df):,}")
 
 #Title and intro
 st.title("Instacart Market Basket Analysis")
-st.divider()
 st.markdown("This dashboard explores customer purchasing behaviourproducts ac from the Instacart dataset, including department popularity, reorder rates, and basket size analysis.")
 
 st.divider()
