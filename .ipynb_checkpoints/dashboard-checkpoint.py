@@ -68,9 +68,6 @@ selected_aisle = st.sidebar.multiselect(
     default=all_aisle
 )
 
-#Show record count
-st.sidebar.markdown("---")
-st.sidebar.metric("Records in view", f"{len(side_df):,}")    
 
 #Title and intro
 st.title("Instacart Market Basket Analysis")
