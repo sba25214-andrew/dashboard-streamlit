@@ -85,8 +85,8 @@ st.markdown("This dashboard explores customer purchasing behaviour from the Inst
 #Row 1
 col1 = st.columns(1)
 
-with col1
-#Plot 1: Top 15 Most Frequent Itemsets
+with col1:
+#Chart 1: Top 15 Most Frequent Itemsets
 st.subheader("Top 15 Most Frequent Itemsets")
 top_15 = frequent_itemsets_ap.sort_values("support", ascending=False).head(15)
 top_15["item_label"] = top_15["itemsets"].apply(lambda x: ", ".join(list(x)))
@@ -102,10 +102,10 @@ plt.show()
 
 
 #Row 2
-col3, col4 = st.columns(2)
+col2, col3 = st.columns(2)
 
-#Chart 1 - Most Popular Departments
-with col3:
+#Chart 2 - Most Popular Departments
+with col2:
     st.subheader("Most Popular Departments")
     dept_counts = side_df.groupby("department")["product_id"].count().nlargest(6)
     colours = ["#117A65", "#1ABC9C", "#2E86C1", "#5DADE2", "#F39C12", "#E74C3C"]
@@ -119,8 +119,8 @@ with col3:
     st.pyplot(fig)
     plt.close()
 
-#Chart 2 - Top 10 Aisles by Reorder Rate
-with col4:
+#Chart 3 - Top 10 Aisles by Reorder Rate
+with col3:
     st.subheader("Top 10 Aisles by Reorder Rate")
     reorder = side_df.groupby("aisle")["reordered"].mean().nlargest(10).sort_values().mul(100)
     gradient = ["#A3E4D7", "#7DCEA0", "#52BE80", "#45B39D", "#27AE60",
@@ -140,8 +140,8 @@ st.markdown("---")
 #Row 3
 col5, col6 = st.columns(2)
 
-#Chart 3 - Basket Size
-with col5:
+#Chart 4 - Basket Size
+with col4:
     st.subheader("How Big is a Typical Order?")
     basket_size = side_df.groupby("order_id")["product_id"].count()
     bins   = [0, 5, 10, 15, 20, 25, 100]
@@ -158,8 +158,8 @@ with col5:
     plt.close()
     st.caption(f"Average basket size: {basket_size.mean():.0f} items")
 
-#Chart 4 - Reordered vs First-Time by Department
-with col6:
+#Chart 5 - Reordered vs First-Time by Department
+with col5:
     st.subheader("Reordered vs First-Time by Department")
     department_data = side_df.groupby("department")["reordered"].value_counts().unstack().fillna(0).nlargest(8, 1)
     fig, ax = plt.subplots(figsize=(6, 5))
@@ -176,7 +176,6 @@ with col6:
 
 #Why is it suitable for ML
 st.subheader("Why is this data suitable for Machine Learning?")
-st.markdown("*⚠️ Please note the data displayed here is not as large as the total in the overall dataset due to size constraints. A large sample was taken to avoid exceeding Streamlit Community Cloud memory limits.*")
 st.markdown("---")
 
 st.markdown("**Content-Based Filtering**")
@@ -199,4 +198,5 @@ st.markdown("The basket size chart shows that most orders contain multiple items
 
 st.markdown("")
 st.markdown("---")
+st.markdown("*⚠️ Please note the data displayed here is not as large as the total in the overall dataset due to size constraints. A large sample was taken to avoid exceeding Streamlit Community Cloud memory limits.*")
 st.caption("🔎 Dashboard designed for adults aged 65+ | CA2 - Data Visualisation Techniques | Designed by SBA25214 ❤️ |  🏛️ CCT College Dublin 2026")
