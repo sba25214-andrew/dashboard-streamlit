@@ -10,19 +10,36 @@ st.set_page_config(
     layout="wide"
 )
 
-# Custom CSS for 65+ accessibility
-st.markdown("""
+#Font size toggle for 65+ accessibility (Eleken, 2024)
+st.sidebar.title("🔍 Filters")
+st.sidebar.markdown("Use these to explore the data.")
+font_choice = st.sidebar.radio(
+    "Text size",
+    options=["Large", "Extra Large"],
+    index=0,
+    help="Increase the text size for easier reading."
+)
+st.sidebar.divider()
+
+#Base size in pixels driven by the toggle above
+base_px = 18 if font_choice == "Large" else 22
+label_px = base_px + 2
+value_px = base_px + 14
+tab_px = base_px
+
+#Custom CSS for 65+ accessibility
+st.markdown(f"""
     <style>
-        html, body, [class*="css"] { font-size: 18px !important; }
-        [data-testid="stMetricLabel"] { font-size: 20px !important; font-weight: bold; }
-        [data-testid="stMetricValue"] { font-size: 32px !important; font-weight: bold; color: #117A65; }
-        h1 { font-size: 2.2rem !important; color: #117A65; }
-        h2 { font-size: 1.6rem !important; color: #1a1a2e; }
-        .stMarkdown { line-height: 1.8 !important; }
-        .stTabs [data-baseweb="tab-list"] { gap: 10px; }
-        .stTabs [data-baseweb="tab"] { font-size: 18px !important; font-weight: bold; padding: 10px 20px; }
-        .stTabs [data-baseweb="tab-panel"] { font-size: 18px !important; line-height: 1.8 !important; padding-top: 20px; }
-        .stTabs [data-baseweb="tab-panel"] p { font-size: 18px !important; }
+        html, body, [class*="css"] {{ font-size: {base_px}px !important; }}
+        [data-testid="stMetricLabel"] {{ font-size: {label_px}px !important; font-weight: bold; }}
+        [data-testid="stMetricValue"] {{ font-size: {value_px}px !important; font-weight: bold; color: #117A65; }}
+        h1 {{ font-size: 2.2rem !important; color: #117A65; }}
+        h2 {{ font-size: 1.6rem !important; color: #1a1a2e; }}
+        .stMarkdown {{ line-height: 1.8 !important; }}
+        .stTabs [data-baseweb="tab-list"] {{ gap: 10px; }}
+        .stTabs [data-baseweb="tab"] {{ font-size: {tab_px}px !important; font-weight: bold; padding: 10px 20px; }}
+        .stTabs [data-baseweb="tab-panel"] {{ font-size: {tab_px}px !important; line-height: 1.8 !important; padding-top: 20px; }}
+        .stTabs [data-baseweb="tab-panel"] p {{ font-size: {tab_px}px !important; }}
     </style>
 """, unsafe_allow_html=True)
 
@@ -46,11 +63,7 @@ def load_data():
 with st.spinner("Fetching your shopping habits..."):
     dash_df = load_data()
 
-# Sidebar filters
-st.sidebar.title("🔍 Filters")
-st.sidebar.markdown("Use these to explore the data.")
-st.sidebar.markdown("")
-
+#Sidebar department filter
 all_departments = sorted(dash_df[dash_df["department"] != "missing"]["department"].dropna().unique().tolist())
 selected_departments = st.sidebar.multiselect(
     "Select Departments",
