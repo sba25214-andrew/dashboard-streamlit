@@ -192,82 +192,91 @@ tab1, tab2, tab3, tab4 = st.tabs([
 ])
 
 with tab1:
-    st.markdown(
-        f"Content-based filtering recommends items whose attributes resemble those of a "
-        f"seed product the user has already liked. With **{side_df['product_name'].nunique():,}** "
-        f"products across **{side_df['department'].nunique():,}** departments and "
-        f"**{side_df['aisle'].nunique():,}** aisles, the dataset has rich product attributes "
-        f"for a model to learn from. A TF-IDF vectoriser was used to compute how alike any two "
-        f"products are, and produce closely related items, with the product name combined with "
-        f"aisle and department to give a more meaningful similarity score rather than a binary "
-        f"0 or 1. A model trained this way recommends closely related items within the seed's "
-        f"own category, as the 'Most Popular Departments' chart above illustrates with products "
-        f"clustering into a small number of categories. There is a limitation here, though, as "
-        f"products in the same aisle will appear similar, which is not semantic similarity, and "
-        f"the vector was left at default as a baseline and not tuned (Tan, Steinbach and "
-        f"Kumar, 2018)."
-    )
+    n_products = side_df["product_name"].nunique()
+    n_depts = side_df["department"].nunique()
+    n_aisles = side_df["aisle"].nunique()
+
+    st.markdown(f"""
+Content-based filtering recommends items whose attributes resemble those of a
+seed product the user has already liked. With **{n_products:,}** products across
+**{n_depts:,}** departments and **{n_aisles:,}** aisles, the dataset has rich
+product attributes for a model to learn from. A TF-IDF vectoriser was used to
+compute how alike any two products are, and produce closely related items, with
+the product name combined with aisle and department to give a more meaningful
+similarity score rather than a binary 0 or 1. A model trained this way recommends
+closely related items within the seed's own category, as the 'Most Popular
+Departments' chart above illustrates with products clustering into a small number
+of categories. There is a limitation here, though, as products in the same aisle
+will appear similar, which is not semantic similarity, and the vector was left at
+default as a baseline and not tuned.
+""")
 
 with tab2:
-    reorder_rate = side_df['reordered'].mean() * 100
-    unique_users = side_df['user_id'].nunique() if 'user_id' in side_df.columns else None
+    reorder_rate = side_df["reordered"].mean() * 100
+    n_lines = len(side_df)
+    unique_users = side_df["user_id"].nunique() if "user_id" in side_df.columns else None
     user_line = f"from **{unique_users:,}** unique customers " if unique_users else ""
 
-    st.markdown(
-        f"Collaborative filtering learns from the purchasing behaviour of the customers but "
-        f"ignores the product attributes. The dataset contains **{len(side_df):,}** order lines "
-        f"{user_line}, enough purchase history for collaborative filtering models to identify "
-        f"meaningful patterns. User-User filtering recommends products that are bought by similar "
-        f"users, whilst Item-Item recommends products similar to those that have already been "
-        f"re-ordered. The difference here from content-based filtering is that both variants can "
-        f"recommend products across categories, as products are being bought by the same people. "
-        f"One challenge with collaborative filtering is sparsity, as most customers have only "
-        f"purchased a small fraction of the catalogue. However, the high reorder rate of "
-        f"**{reorder_rate:.1f}%** shown in the charts above means customers return to the same "
-        f"products repeatedly, which creates denser, more reliable interaction patterns than a "
-        f"typical one-off purchase dataset (Burke, 2022)."
-    )
+    st.markdown(f"""
+Collaborative filtering learns from the purchasing behaviour of the customers but
+ignores the product attributes. The dataset contains **{n_lines:,}** order lines
+{user_line}, enough purchase history for collaborative filtering models to identify
+meaningful patterns. User-User filtering recommends products that are bought by
+similar users, whilst Item-Item recommends products similar to those that have
+already been re-ordered. The difference here from content-based filtering is that
+both variants can recommend products across categories, as products are being
+bought by the same people. One challenge with collaborative filtering is sparsity,
+as most customers have only purchased a small fraction of the catalogue. However,
+the high reorder rate of **{reorder_rate:.1f}%** shown in the charts above means
+customers return to the same products repeatedly, which creates denser, more
+reliable interaction patterns than a typical one-off purchase dataset.
+""")
 
 with tab3:
     high_reorder_depts = (
-        side_df.groupby('department')['reordered'].mean()
+        side_df.groupby("department")["reordered"].mean()
         .mul(100)
         .gt(50)
         .sum()
     )
-    st.markdown(
-        f"Market Basket Analysis is a technique that examines combinations of items purchased "
-        f"together to uncover purchase patterns, using association rule mining algorithms such "
-        f"as Apriori and FP-Growth. These use three components: support, the relative frequency "
-        f"a rule appears in the dataset; confidence, the reliability of that rule; and lift, "
-        f"where a value above 1 means buying certain goods together is more likely than chance. "
-        f"This dataset is well-suited for this because **{high_reorder_depts}** out of "
-        f"**{side_df['department'].nunique():,}** departments have an average reorder rate above "
-        f"50%, as shown in the charts above. High reorder rates signal consistent, habitual "
-        f"purchasing, exactly the behaviour these algorithms are designed to detect. The strongest "
-        f"rules tend to be dominated by fresh produce, which shows that recommendations such as "
-        f"bundling and cross-promotion would work well on the strongest pairings "
-        f"(Tan, Steinbach and Kumar, 2018; Raschka, 2018)."
-    )
+    n_depts = side_df["department"].nunique()
+
+    st.markdown(f"""
+Market Basket Analysis is a technique that examines combinations of items
+purchased together to uncover purchase patterns, using association rule mining
+algorithms such as Apriori and FP-Growth. These use three components: support,
+the relative frequency a rule appears in the dataset; confidence, the reliability
+of that rule; and lift, where a value above 1 means buying certain goods together
+is more likely than chance. This dataset is well-suited for this because
+**{high_reorder_depts}** out of **{n_depts:,}** departments have an average reorder
+rate above 50%, as shown in the charts above. High reorder rates signal consistent,
+habitual purchasing, exactly the behaviour these algorithms are designed to detect.
+The strongest rules tend to be dominated by fresh produce, which shows that
+recommendations such as bundling and cross-promotion would work well on the
+strongest pairings.
+""")
 
 with tab4:
-    avg_basket = side_df.groupby('order_id')['product_id'].count().mean()
+    avg_basket = side_df.groupby("order_id")["product_id"].count().mean()
     multi_item_pct = (
-        side_df.groupby('order_id')['product_id'].count().gt(1).mean() * 100
+        side_df.groupby("order_id")["product_id"].count().gt(1).mean() * 100
     )
-    st.markdown(
-        f"The original Instacart dataset contains over 3 million grocery orders, from which a "
-        f"sample was taken to avoid the memory and computational issues the full data caused. "
-        f"Even sampled, three properties make it strong for machine learning. **Scale:** with "
-        f"**{len(side_df):,}** order lines there are enough examples for models to generalise "
-        f"rather than memorise. **Basket depth:** the average order contains **{avg_basket:.1f}** "
-        f"items and **{multi_item_pct:.1f}%** of orders contain more than one item, without which "
-        f"co-occurrence mining would be impossible. **Repeat behaviour:** a reorder rate of "
-        f"**{side_df['reordered'].mean() * 100:.1f}%** means the data captures genuine "
-        f"preferences rather than one-off purchases, which makes both recommendation and "
-        f"prediction tasks more reliable. Together these properties mean the dataset supports "
-        f"all three ML approaches described in the other tabs."
-    )
+    n_lines = len(side_df)
+    reorder_rate = side_df["reordered"].mean() * 100
+
+    st.markdown(f"""
+The original Instacart dataset contains over 3 million grocery orders, from which
+a sample was taken to avoid the memory and computational issues the full data
+caused. Even sampled, three properties make it strong for machine learning.
+**Scale:** with **{n_lines:,}** order lines there are enough examples for models to
+generalise rather than memorise. **Basket depth:** the average order contains
+**{avg_basket:.1f}** items and **{multi_item_pct:.1f}%** of orders contain more than
+one item, without which co-occurrence mining would be impossible. **Repeat
+behaviour:** a reorder rate of **{reorder_rate:.1f}%** means the data captures
+genuine preferences rather than one-off purchases, which makes both recommendation
+and prediction tasks more reliable. Together these properties mean the dataset
+supports all three ML approaches described in the other tabs.
+""")
 
 st.caption(
     "These tabs explain why the dataset suits each approach using the live figures above. "
